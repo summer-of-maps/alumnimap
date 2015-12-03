@@ -1,0 +1,601 @@
+<!doctype><html><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Odyssey.js Slides</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="http://code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css">
+<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+  <link rel="icon" type="image/x-icon" href="http://cartodb.github.io/odyssey.js/sandbox/favicon.png">
+  <link rel="icon" type="image/png" href="http://cartodb.github.io/odyssey.js/sandbox/favicon.png">
+
+  <link rel="stylesheet" href="http://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/themes/css/cartodb.css">
+  <link rel="stylesheet" href="http://cartodb.github.io/odyssey.js/sandbox/css/slides.css">
+  <!--<link rel="stylesheet" href="slides.css">!-->
+  <link rel="stylesheet" href="leaflet.awesome-markers.css">
+  <script src="leaflet.awesome-markers.js"></script>
+  <script src="http://cartodb.github.io/odyssey.js/vendor/modernizr-2.6.2.min.js"></script>
+</head>
+<style>
+        #slides_container {
+    display:none;
+    position:absolute;
+    top:40px;
+    left:40px;
+    width:400px;
+    padding:40px;
+    padding-right:20px;
+    background-color:#fff;
+    background-color:rgba(240, 240, 240, 0.9);
+    z-index:10;
+    border-color:#fff;
+    border-color:rgba(100,100,100,1)
+}
+#slides_container.visible {
+    display:block !important
+}
+#slides_container .slide {
+    display:none;
+    overflow-y:auto;
+    padding-right:20px
+}
+#slides_container .slide.selected {
+    display:block !important
+}
+#slides_container .slide.scrolled img {
+    margin: 0 20px 0 0;
+    float: left;
+    width: 150px;
+}
+#slides_container .slide strong {
+    font-family:"AleoBold"
+}
+#slides_container .slide em {
+    font-style:italic
+}
+#slides_container h1, #slides_container h2, #slides_container h3, #slides_container h4, #slides_container h5, #slides_container h6 {
+    font-family:'Proxima N W01 Bold', Sans-serif;
+    color:#333;
+    font-size:45px
+}
+#slides_container h1:after, #slides_container h2:after, #slides_container h3:after, #slides_container h4:after, #slides_container h5:after, #slides_container h6:after {
+    display:block;
+    margin:20px 0 20px 0;
+    height:3px;
+    content:" ";
+    text-shadow:none;
+    background-color:#333;
+    width:140px
+}
+#slides_container h2, #slides_container h3, #slides_container h4, #slides_container h5, #slides_container h6 {
+    font-size:19px
+}
+#slides_container h2:after, #slides_container h3:after, #slides_container h4:after, #slides_container h5:after, #slides_container h6:after {
+    height:1px;
+    margin:18px 0 18px 0;
+    width:180px
+}
+#slides_container p, #slides_container span {
+    font-family:AleoRegular, Serif;
+    color:#166D8A;
+    font-size:16px;
+    line-height:21px;
+    margin:0 0 19px 0
+}
+#slides_container a {
+    color:#4AA5DC;
+    text-decoration:none
+}
+#slides_container a:hover {
+    text-decoration:underline
+}
+
+</style>
+<body>
+  <div id="map" style="width: 100%; height: 100%;"></div>
+
+  <div id="slides_container" style="display:block;">
+    <div id="dots"></div>
+
+    <div id="slides"></div>
+
+    <ul id="navButtons">
+      <li><a class="prev"></a></li>
+      <li><a class="next"></a></li>
+    </ul>
+  </div>
+
+  <div id="credits">
+    <span class="title" id="title">Title</span>
+    <span class="author"><strong id="author">By Name using</strong> <a href="http://cartodb.github.io/odyssey.js/">Odyssey.js</a><span>
+  </span></span></div>
+
+  <script src="http://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/cartodb.js"></script>
+  <script src="http://cartodb.github.io/odyssey.js/dist/odyssey.js" charset="UTF-8"></script>
+
+  <script>
+          //Section for initializing all icons
+        var azaveaIcon = L.AwesomeMarkers.icon({
+          prefix: 'ion', 
+          markerColor: 'blue',
+          icon: 'earth'
+        });
+
+        var stroudIcon = L.AwesomeMarkers.icon({
+          prefix: 'ion',
+          markerColor: 'blue',
+          icon: 'waterdrop'
+        });
+
+        var audubonIcon = L.AwesomeMarkers.icon({
+          prefix: 'fa', 
+          markerColor: 'cadetblue',
+          icon: 'binoculars'
+        });
+
+        var notebookIcon = L.AwesomeMarkers.icon({
+          prefix: 'fa', 
+          markerColor: 'green',
+          icon: 'graduation-cap'
+        });
+
+        var familiesIcon = L.AwesomeMarkers.icon({
+          prefix: 'fa', 
+          markerColor: 'red',
+          icon: 'group'
+        });
+
+        var sunlightIcon = L.AwesomeMarkers.icon({
+          prefix: 'fa',
+          markerColor: 'orange',
+          icon: 'sun-o'
+        });
+
+        var dvaeycIcon = L.AwesomeMarkers.icon({
+          prefix: 'fa',
+          markerColor: 'purple',
+          icon: 'child'
+        });
+
+        var phsIcon = L.AwesomeMarkers.icon({
+          prefix: 'ion',
+          markerColor: 'green',
+          icon: 'leaf'
+        });
+
+        var ttreeIcon = L.AwesomeMarkers.icon({
+          prefix: 'fa',
+          markerColor: 'darkgreen',
+          icon: 'tree'
+        });
+
+        var hungerIcon = L.AwesomeMarkers.icon({
+                  prefix: 'fa',
+                  markerColor: 'orange',
+                  icon: 'cutlery'
+        });
+
+        var bikeIcon = L.AwesomeMarkers.icon({
+                  prefix: 'fa',
+                  markerColor: 'blue',
+                  icon: 'bicycle'
+        });
+
+
+        var cbeiIcon = L.AwesomeMarkers.icon({
+                  prefix: 'fa',
+                  markerColor: 'Green',
+                  icon: 'lightbulb-o'
+        });
+
+        var treepeopleIcon = L.AwesomeMarkers.icon({
+                  prefix: 'fa',
+                  markerColor: 'darkpurple',
+                  icon: 'leaf'
+        });
+
+        var cityharvestIcon = L.AwesomeMarkers.icon({
+                  prefix: 'fa',
+                  markerColor: 'green',
+                  icon: 'recycle'
+        });
+
+        var girlstartIcon = L.AwesomeMarkers.icon({
+                  prefix: 'fa',
+                  markerColor: 'pink',
+                  icon: 'female'
+        });
+
+        var havenIcon = L.AwesomeMarkers.icon({
+                  prefix: 'fa',
+                  markerColor: 'orange',
+                  icon: 'database'
+        });
+
+        var cdcIcon = L.AwesomeMarkers.icon({
+                  prefix: 'fa',
+                  markerColor: 'red',
+                  icon: 'paint-brush'
+        });
+
+    var resizePID;
+
+    function clearResize() {
+      clearTimeout(resizePID);
+      resizePID = setTimeout(function() { adjustSlides(); }, 100);
+    }
+
+    if (!window.addEventListener) {
+      window.attachEvent("resize", function load(event) {
+        clearResize();
+      });
+    } else {
+      window.addEventListener("resize", function load(event) {
+        clearResize();
+      });
+    }
+
+    function adjustSlides() {
+      var container = document.getElementById("slides_container"),
+          slide = document.querySelectorAll('.selected_slide')[0];
+
+      if (slide) {
+        if (slide.offsetHeight+169+40+80 >= window.innerHeight) {
+          container.style.bottom = "80px";
+
+          var h = container.offsetHeight;
+
+          slide.style.height = h-169+"px";
+          slide.classList.add("scrolled");
+        } else {
+          container.style.bottom = "auto";
+          container.style.minHeight = "0";
+
+          slide.style.height = "auto";
+          slide.classList.remove("scrolled");
+        }
+      }
+    }
+
+    var resizeAction = O.Action(function() {
+      function imageLoaded() {
+        counter--;
+
+        if (counter === 0) {
+          adjustSlides();
+        }
+      }
+      var images = $('img');
+      var counter = images.length;
+
+      images.each(function() {
+        if (this.complete) {
+          imageLoaded.call( this );
+        } else {
+          $(this).one('load', imageLoaded);
+        }
+      });
+    });
+
+    function click(el) {
+      var element = O.Core.getElement(el);
+      var t = O.Trigger();
+
+      // TODO: clean properly
+      function click() {
+        t.trigger();
+      }
+
+      if (element) element.onclick = click;
+
+      return t;
+    }
+
+    O.Template({
+      init: function() {
+        var seq = O.Triggers.Sequential();
+
+        var baseurl = this.baseurl = 'http://{s}.api.cartocdn.com/base-light/{z}/{x}/{y}.png';
+        var map = this.map = L.map('map').setView([0, 0.0], 4);
+        var basemap = this.basemap = L.tileLayer(baseurl, {
+          attribution: 'data OSM - map CartoDB'
+        }).addTo(map);
+
+        // enanle keys to move
+        O.Keys().on('map').left().then(seq.prev, seq)
+        O.Keys().on('map').right().then(seq.next, seq)
+
+        click(document.querySelectorAll('.next')).then(seq.next, seq)
+        click(document.querySelectorAll('.prev')).then(seq.prev, seq)
+
+
+
+        var slides = O.Actions.Slides('slides');
+        var story = O.Story()
+
+        this.story = story;
+        this.seq = seq;
+        this.slides = slides;
+        this.progress = O.UI.DotProgress('dots').count(0);
+      },
+
+      update: function(actions) {
+        var self = this;
+
+        if (!actions.length) return;
+
+        this.story.clear();
+
+        if (this.baseurl && (this.baseurl !== actions.global.baseurl)) {
+          this.baseurl = actions.global.baseurl || 'http://0.api.cartocdn.com/base-light/{z}/{x}/{y}.png';
+
+          this.basemap.setUrl(this.baseurl);
+        }
+
+        if (this.cartoDBLayer && ("http://"+self.cartoDBLayer.options.user_name+".cartodb.com/api/v2/viz/"+self.cartoDBLayer.options.layer_definition.stat_tag+"/viz.json" !== actions.global.vizjson)) {
+          this.map.removeLayer(this.cartoDBLayer);
+
+          this.cartoDBLayer = null;
+          this.created = false;
+        }
+
+        if (actions.global.vizjson && !this.cartoDBLayer) {
+          if (!this.created) { // sendCode debounce < vis loader
+            cdb.vis.Loader.get(actions.global.vizjson, function(vizjson) {
+              self.map.fitBounds(vizjson.bounds);
+
+              cartodb.createLayer(self.map, vizjson)
+                .done(function(layer) {
+                  self.cartoDBLayer = layer;
+
+                  var sublayer = layer.getSubLayer(0),
+                      layer_name = layer.layers[0].options.layer_name,
+                      filter = actions.global.cartodb_filter ? " WHERE "+actions.global.cartodb_filter : "";
+
+                  sublayer.setSQL("SELECT * FROM "+layer_name+filter)
+
+                  self.map.addLayer(layer);
+
+                  self._resetActions(actions);
+                }).on('error', function(err) {
+                  console.log("some error occurred: " + err);
+                });
+            });
+
+            this.created = true;
+          }
+
+          return;
+        }
+
+        this._resetActions(actions);
+      },
+
+      _resetActions: function(actions) {
+        // update footer title and author
+        var title_ = actions.global.title === undefined ? '' : actions.global.title,
+            author_ = actions.global.author === undefined ? 'Using' : 'By '+actions.global.author+' using';
+
+        document.getElementById('title').innerHTML = title_;
+        document.getElementById('author').innerHTML = author_;
+        document.title = title_ + " | " + author_ +' Odyssey.js';
+
+        var sl = actions;
+
+        document.getElementById('slides').innerHTML = ''
+        this.progress.count(sl.length);
+
+        // create new story
+        for(var i = 0; i < sl.length; ++i) {
+          var slide = sl[i];
+          var tmpl = "<div class='slide' style='diplay:none'>";
+
+          tmpl += slide.html();
+          tmpl += "</div>";
+          document.getElementById('slides').innerHTML += tmpl;
+
+          this.progress.step(i).then(this.seq.step(i), this.seq)
+
+          var actions = O.Parallel(
+            this.slides.activate(i),
+            slide(this),
+            this.progress.activate(i),
+            resizeAction
+          );
+
+          actions.on("finish.app", function() {
+            adjustSlides();
+          });
+
+          this.story.addState(
+            this.seq.step(i),
+            actions
+          )
+        }
+
+        this.story.go(this.seq.current());
+      },
+
+      changeSlide: function(n) {
+        this.seq.current(n);
+      }
+    });
+  </script>
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-20934186-21', 'cartodb.github.io');
+    ga('send', 'pageview');
+  </script>
+
+  <script type="text/javascript" src="http://fast.fonts.net/jsapi/3af16084-ba56-49ca-b37d-0b49b59e1927.js"></script>
+
+<script id="md_template" type="text/template">
+```
+-baseurl: "https://stamen-tiles-a.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.png"
+-title: "Azavea's Summer of Maps: Where Are They Now?"
+-author: "Tyler Dahlberg"
+```
+
+#Azavea's [Summer of Maps](http://www.summerofmaps.com) Alumni
+```
+L.marker([39.9588, -75.1586],{icon: azaveaIcon}).bindPopup('<a href="http://www.azavea.com">Azavea HQ</a>').addTo(S.map).actions.addRemove(S.map)
+- center: [39.9588, -75.1586]
+- zoom: 16
+```
+
+##Where are they now?
+
+Summer of Maps offers stipends to student GIS analysts to perform geospatial data analysis for non-profit organizations. Every year we match up non-profit organizations that have spatial analysis needs with talented students of GIS to implement projects over a three-month period during the summer.
+
+[Eight alumni](http://www.summerofmaps.com/alumni/) have graduated from the program since 2012, all of whom have moved on to interesting work and studies. Let's see what they're up to after they sharpened their spatial toolkits at Azavea's offices for a summer.
+
+
+#Angela Sakrison
+![headshot](http://summerofmaps.wordpress.azavea.com/wp-content/uploads/sites/6/2013/11/angela_headshot.jpg)
+```
+L.marker([39.859694, -75.782794], {icon: stroudIcon}).bindPopup('<a href="http://www.stroudcenter.org">Stroud Water Research Center</a>').openPopup().addTo(S.map).actions.addRemove(S.map)//stroud
+L.marker([40.1226764, -75.4380072],{icon: audubonIcon}).bindPopup('<a href="http://pa.audubon.org">Audubon Pennsylvania</a>').addTo(S.map).actions.addRemove(S.map)//audubon
+- center: [39.9750, -75.6525]
+- zoom: 10
+```
+
+Angela analyzed patterns and distributions of bird collisions with buildings for [Audobon Pennsylvania](http://www.summerofmaps.com/project/audubon-pennsylvania/), and evaluated the impact of vegetation changes in riparian buffers on stream geomorphology and fish communities for the [Stroud Water Research Center](http://www.summerofmaps.com/project/audubon-pennsylvania/).
+
+Since Summer of Maps, Angela worked with Google Maps in Seattle to improve their spatial data, mapped "heartbreaks" with poet friend [Michelle Penaloza](http://www.michellepenaloza.com/theidea/), and is now working on a PhD focused on landscape migration responses due to climate change and sea level rise at the [GeoDa Center] (https://geodacenter.asu.edu)at [Arizona State University](www.asu.edu).
+
+#Nse-Abasi Umoh Esema
+![headshot](http://summerofmaps.wordpress.azavea.com/wp-content/uploads/sites/6/2013/11/nse_headshot.jpg)
+```
+L.marker([39.9500635,-75.1520433], {icon: notebookIcon}).bindPopup('<a href="http://www.thenotebook.org">Philadelphia Public School Notebook</a>').openPopup().actions.addRemove(S.map)//notebook
+L.marker([39.9749997,-75.1575918], {icon: familiesIcon}).bindPopup('<a href="http://www.cwphilly.org">Campaign for Working Families</a>').openPopup().actions.addRemove(S.map)//working families
+- center: [39.9581, -75.1627]
+- zoom: 14
+```
+
+
+Nse visualized the Renaissance Schools Initiative's Impact on the geography of the Philadelphia Public School District for [The Philadelphia Public School Notebook](http://www.summerofmaps.com/project/philadelphia-public-school-notebookwhyy/), and targeted programs to assist working people manage their finances for [The Campaign for Working Families](http://www.summerofmaps.com/project/the-campaign-for-working-families/).
+
+Nse is now Program Director for Community Media Projects at the [MIT Community Innovators Lab](http://web.mit.edu/colab/people-staff.html).
+
+#Lena Ferguson
+![headshot](http://summerofmaps.wordpress.azavea.com/wp-content/uploads/sites/6/2013/11/lena_headshot.jpg)
+```
+L.marker([38.9069328,-77.0429695], {icon: sunlightIcon}).bindPopup('<a href="http://www.sunlightfoundation.org">Sunlight Foundation</a>').actions.addRemove(S.map)//sunlight
+L.marker([39.9496657,-75.1680264], {icon: dvaeycIcon}).bindPopup('<a href="http://www.dvaeyc.org">DVAEYC</a>').actions.addRemove(S.map)//DVAEYC
+- center: [39.0235, -76.5665]
+- zoom: 8
+```
+
+
+Lena mapped and analyzed the political influence of campaign donations by county across the US for the [Sunlight Foundation](http://www.summerofmaps.com/project/sunlight-foundation/), and mapped need versus capacity for high-quality childcare in the Delaware Valley for the [Delaware Valley Association for the Education of Young Children](http://www.summerofmaps.com/project/dvaeyc/).
+
+Lena is now a Research Analyst at the [Initiative for a Competitive Inner City](http://www.icic.org) in Boston, MA. She works on research projects and the Inner City in Focus infographic series.
+
+#Julia Reeves
+![headshot](http://summerofmaps.wordpress.azavea.com/wp-content/uploads/sites/6/2013/11/julia_headshot.jpg)
+```
+L.marker([39.955963,-75.173106], {icon: phsIcon}).bindPopup('<a href="http://www.phsonline.org">Pennsylvania Horticultural Society</a>').actions.addRemove(S.map)//PHS
+L.marker([32.787726,-96.797903], {icon: ttreeIcon}).bindPopup('<a href="http://www.texastrees.org">Texas Tree Foundation</a>').actions.addRemove(S.map)//Texas Tree
+- center: [35.7465, -90.8130]
+- zoom: 5
+```
+
+Julia prioritized tree planting locations and evaluated the impact of of tree canopy change in Dalls for the [Texas Tree Foundation](http://www.summerofmaps.com/project/texas-trees-foundation/), and analyzed urban tree mortality in Philadelphia for the [Pennsylvania Horticultural Society](http://www.summerofmaps.com/project/pennsylvania-horticultural-society/).
+
+Julia graduated from Haverford College with a Bachelor's Degree in Growth and Structure of Cities in May 2014. In summer of 2014 she began working for the [ESF Dream Camp Foundation](http://esfdreamcamp.org/), a nonprofit education organization providing free after-school and summer programs to low-income students from age 6 and up in the Philadelphia area. Julia works full-time for them as a Dream Camp Leadership Apprentice, where she helps create maps of the program's impact, create marketing materials, write grants, and assist the site director. 
+
+#Tyler Dahlberg
+![headshot](http://summerofmaps.wordpress.azavea.com/wp-content/uploads/sites/6/2013/11/tyler_headshot.jpg)
+
+Tyler found priority populations and geographically targeted outreach for [Greater Philadelphia Coalition Against Hunger](http://www.hungercoalition.org/sites/hungercoalition.org/files/framework_logo.png), and analyzed bike theft, crashes, and activity across Philadelphia for the [The Bicycle Coalition of Greater Philadelphia](http://bicyclecoalition.org/wp-content/themes/bikeco/css/img/logo.jpg).
+
+Tyler finished his MS in GIS for Development and Environment at [Clark University](http://www.clarku.edu/departments/international-development-community-environment/programs/gis-development-environment/), traveled to Uganda to perform research on rural electrification, and now works at Azavea as a [Geospatial Solutions Specialist](http://www.azavea.com/about-us/staff-profiles/tyler-dahlberg/).
+
+```
+L.marker([39.9673, -75.1697], {icon: hungerIcon}).bindPopup('<a href="http://www.hungercoalition.org">Greater Philadelphia <br>Coalition Against Hunger</a>').actions.addRemove(S.map)//Hunger
+L.marker([39.9506, -75.1611], {icon: bikeIcon}).bindPopup('<a href="http://www.bicyclecoalition.org">Bicycle Coalition</a>').actions.addRemove(S.map)//Bike
+- center: [39.9505, -75.1612]
+- zoom: 13
+```
+
+#Jenna Glat
+```
+L.marker([39.893236,-75.174648], {icon: cbeiIcon}).bindPopup('<a href="http://www.cbei.psu.edu">Consortium for Building<br>Energy Innovation</a>').actions.addRemove(S.map)//CBEI
+L.marker([34.129134,-118.406276], {icon: treepeopleIcon}).bindPopup('<a href="http://www.treepeople.org">TreePeople</a>').actions.addRemove(S.map)//TreePeople
+- center: [30.4487, -103.6670]
+- zoom: 4
+```
+
+![headshot](http://summerofmaps.wordpress.azavea.com/wp-content/uploads/sites/6/2014/04/photo1.jpg)
+
+
+Jenna analyzed the correlation between public health and the socioeconomic characteristics of tree cover for [TreePeople](http://www.summerofmaps.com/project/treepeople/), and measured the energy efficiency of five US cities' buildings for [The Consortium for Building Energy Innovation](http://www.summerofmaps.com/project/consortium-building-energy-innovation/).
+
+Since Summer of Maps, Jenna interned with [National Geographic](www.nationalgeographic.com) on their Education and Children's Media Team where she worked on [GeoTours](http://alliances.nationalgeographic.com/detail/geotours/ednFDB1602C981FEBCD2). She now works as a Support Engineer at [Hubspot](www.hubspot.com) in Cambridge, MA.
+
+#Amory Hillengas
+```
+L.marker([40.7467294,-73.9848598], {icon: cityharvestIcon}).bindPopup('<a href="http://www.cityharvest.org">City Harvest</a>').actions.addRemove(S.map)//cityharvest
+L.marker([30.351282,-97.719814], {icon: girlstartIcon}).bindPopup('<a href="http://www.girlstart.org">Girlstart</a>').actions.addRemove(S.map)//girlstart
+- center: [33.4681, -91.4722]
+- zoom: 5
+```
+
+![headshot](http://summerofmaps.wordpress.azavea.com/wp-content/uploads/sites/6/2014/04/amory.jpg)
+
+
+Amory analyzed funding resources and program adoption rates for [GirlStart](http://www.summerofmaps.com/project/girlstart/), and examined retail food access in low income communities in New York City for [City Harvest](http://www.summerofmaps.com/project/city-harvest/).
+
+Amory now works for the [Philadelphia Department of Public Health](http://www.phila.gov/health/index.html) as a Geospatial Analyst, where she evaluates obesity, tobacco control, and chronic disease with GIS.
+
+#Tim St. Onge
+```
+L.marker([41.3063362,-72.9252572], {icon: havenIcon}).bindPopup('<a href="http://www.ctdatahaven.org">Data Haven</a>').actions.addRemove(S.map)//datahaven
+L.marker([39.953826,-75.160349], {icon: cdcIcon}).bindPopup('<a href="http://www.cdesignc.org">Community Design Collaborative</a>').actions.addRemove(S.map)//cdc
+- center: [40.3507, -74.6329]
+- zoom: 8
+```
+
+![headshot](http://summerofmaps.wordpress.azavea.com/wp-content/uploads/sites/6/2014/04/tim.jpg)
+
+
+Tim analyzed the relationship between neighborhood indicators in the Greater New Haven, CT region for [DataHaven](http://www.summerofmaps.com/project/datahaven/), and prioritized design grants in Philadelphia for the [Community Design Collaborative](http://www.summerofmaps.com/project/community-design-collaborative/).
+
+Tim is currently finishing his Master of Science in GIS for Development and Environment at Clark University in Worcester, MA. He is developing research on poverty and park access in Philadelphia to present at [AAG](http://www.aag.org/cs/annualmeeting) in Chicago that builds off of his Summer of Maps work for the Community Design Collaborative. Tim is also researching high performance geocomputing in Python.
+
+#Where will you make an impact?
+Summer of Maps alumni have built valuable skills in spatial analysis, cartography, decision making, and project-based client work. 
+
+They've continued on to work in technology, academia, and urban planning. Where will your Summer of Maps take you? 
+
+Start thinking about your journey and apply at [SummerofMaps.com](http://www.summerofmaps.com) when student applications open on **February 27, 2015**.
+
+
+```
+L.marker([39.859694, -75.782794], {icon: stroudIcon}).bindPopup('<a href="http://www.stroudcenter.org">Stroud Water Research Center</a>').openPopup().actions.addRemove(S.map)//stroud
+L.marker([40.1226764, -75.4380072],{icon: audubonIcon}).bindPopup('<a href="http://pa.audubon.org">Audubon Pennsylvania</a>').actions.addRemove(S.map)//audubon
+L.marker([39.9500635,-75.1520433], {icon: notebookIcon}).bindPopup('<a href="http://www.thenotebook.org">Philadelphia Public School Notebook</a>').openPopup().actions.addRemove(S.map)//notebook
+L.marker([39.9749997,-75.1575918], {icon: familiesIcon}).bindPopup('<a href="http://www.cwphilly.org">Campaign for Working Families</a>').openPopup().actions.addRemove(S.map)//working families
+L.marker([38.9069328,-77.0429695], {icon: sunlightIcon}).bindPopup('<a href="http://www.sunlightfoundation.org">Sunlight Foundation</a>').actions.addRemove(S.map)//sunlight
+L.marker([39.9496657,-75.1680264], {icon: dvaeycIcon}).bindPopup('<a href="http://www.dvaeyc.org">DVAEYC</a>').actions.addRemove(S.map)//DVAEYC
+L.marker([39.955963,-75.173106], {icon: phsIcon}).bindPopup('<a href="http://www.phsonline.org">Pennsylvania Horticultural Society</a>').actions.addRemove(S.map)//PHS
+L.marker([32.787726,-96.797903], {icon: ttreeIcon}).bindPopup('<a href="http://www.texastrees.org">Texas Tree Foundation</a>').actions.addRemove(S.map)//Texas Tree
+L.marker([39.9673, -75.1697], {icon: hungerIcon}).bindPopup('<a href="http://www.hungercoalition.org">Greater Philadelphia <br>Coalition Against Hunger</a>').actions.addRemove(S.map)//Hunger
+L.marker([39.9506, -75.1611], {icon: bikeIcon}).bindPopup('<a href="http://www.bicyclecoalition.org">Bicycle Coalition</a>').actions.addRemove(S.map)//Bike
+L.marker([39.893236,-75.174648], {icon: cbeiIcon}).bindPopup('<a href="http://www.cbei.psu.edu">Consortium for Building<br>Energy Innovation</a>').actions.addRemove(S.map)//CBEI
+L.marker([34.129134,-118.406276], {icon: treepeopleIcon}).bindPopup('<a href="http://www.treepeople.org">TreePeople</a>').actions.addRemove(S.map)//TreePeople
+L.marker([40.7467294,-73.9848598], {icon: cityharvestIcon}).bindPopup('<a href="http://www.cityharvest.org">City Harvest</a>').actions.addRemove(S.map)//cityharvest
+L.marker([30.351282,-97.719814], {icon: girlstartIcon}).bindPopup('<a href="http://www.girlstart.org">Girlstart</a>').actions.addRemove(S.map)//girlstart
+L.marker([41.3063362,-72.9252572], {icon: havenIcon}).bindPopup('<a href="http://www.ctdatahaven.org">Data Haven</a>').actions.addRemove(S.map)//datahaven
+L.marker([39.953826,-75.160349], {icon: cdcIcon}).bindPopup('<a href="http://www.cdesignc.org">Community Design Collaborative</a>').actions.addRemove(S.map)//cdc
+- center: [31.4287, -108.9404]
+- zoom: 4
+```
+</script></body></html>
